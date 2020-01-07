@@ -1,6 +1,7 @@
 package com.nec.lib.utils;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ArrayUtil {
 
@@ -30,4 +31,25 @@ public class ArrayUtil {
         return result;
     }
 
+    public static String concatStrArrayToString(String[] strArray, String separator) {
+        String result = "";
+        for (String str : strArray) {
+            if(!result.isEmpty())
+                result = result + separator + str;
+            else
+                result = result + str;
+        }
+        return  result;
+    }
+
+    public static String concatStrListToString(List<String> strList, String separator) {
+        String result = "";
+        for (String str : strList) {
+            if(result.isEmpty())
+                result = result + str;
+            else
+                result = result + separator + str;
+        }
+        return  result;
+    }
 }

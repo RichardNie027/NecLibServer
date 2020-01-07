@@ -25,10 +25,10 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(Exception.class)  //Exception 这个是所有异常的父类
     @ResponseBody   //定义异常统一返回json，即使是返回视图的接口
-    Map<String,String> handleControllerException(HttpServletRequest request, Throwable ex) {
+    Map<String,Object> handleControllerException(HttpServletRequest request, Throwable ex) {
         HttpStatus status = getStatus(request);
-        Map<String,String> map = new HashMap();
-        map.put("code", String.valueOf(status.value()));
+        Map<String,Object> map = new HashMap();
+        map.put("code", Integer.valueOf(status.value()));
         map.put("msg", ex.getMessage());
         //这时会返回我们统一的异常json
         logger.error("错误码：" + status.value() + "，" + ex.getMessage(), ex);
@@ -50,10 +50,10 @@ public class CustomExceptionHandler {
      */
     @ExceptionHandler(CustomException.class)
     @ResponseBody
-    Map<String,String> handleControllerCustomException(HttpServletRequest request, CustomException ex) {
+    Map<String,Object> handleControllerCustomException(HttpServletRequest request, CustomException ex) {
         HttpStatus status = getStatus(request);
-        Map<String,String> map = new HashMap();
-        map.put("code", String.valueOf(status.value()));
+        Map<String,Object> map = new HashMap();
+        map.put("code", Integer.valueOf(status.value()));
         map.put("msg", "Custom error msg:" + ex.getMessage());
         logger.error("错误码：" + status.value() + "，" + "Custom error msg:" + ex.getMessage(), ex);
         return map;
