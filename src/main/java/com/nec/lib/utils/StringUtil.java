@@ -1,6 +1,9 @@
 package com.nec.lib.utils;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -105,4 +108,28 @@ public class StringUtil {
     public static boolean parseBoolean(String str) {
         return Boolean.parseBoolean(str);
     }
+
+    public static List<String> multiStrToList(String multiStr, String delimiterRegex) {
+        if(multiStr==null || multiStr.isEmpty())
+            return new ArrayList();
+        //逗号分隔转List
+        String[] strArray = multiStr.split(delimiterRegex);
+        List<String> strList = new ArrayList<String>(strArray.length);
+        Collections.addAll(strList, strArray);
+        return  strList;
+    }
+
+    /**有分隔符的字符串，转in('','')*/
+    public static String multiStrToSqlInClause(String multiStr, String delimiterRegex) {
+        String codes = "";
+        String sql = " in (";
+        for(String item: multiStr.split(delimiterRegex)) {
+            if (!codes.equals("")) {
+                codes = codes + ",";
+            }
+            codes = codes + "'" + item + "'";
+        }
+        return sql + codes + ") ";
+    }
+
 }
