@@ -1,6 +1,38 @@
 package com.nec.lib.utils;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Base64;
+
 public class Base64Util {
+
+    public static String encode(String text) {
+        final Base64.Encoder encoder = Base64.getEncoder();
+        final byte[] textByte;
+        try {
+            textByte = text.getBytes("UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        //编码
+        String encodedText = encoder.encodeToString(textByte);
+        return encodedText;
+    }
+
+    public static String decode(String text) {
+        final Base64.Decoder decoder = Base64.getDecoder();
+        final byte[] textByte = decoder.decode(text);
+        String decodedText = null;
+        try {
+            decodedText = new String(textByte, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        return decodedText;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    //                    配合 XXTea 算法的Base64                            //
+    ///////////////////////////////////////////////////////////////////////////
     public static String byteArrayToBase64(byte a[]) {
         return byteArrayToBase64(a, false);
     }
