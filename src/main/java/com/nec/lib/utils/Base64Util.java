@@ -6,6 +6,10 @@ import java.util.Base64;
 public class Base64Util {
 
     public static String encode(String text) {
+        return encode(text, false);
+    }
+
+    public static String encode(String text, boolean removeEquals) {
         final Base64.Encoder encoder = Base64.getEncoder();
         final byte[] textByte;
         try {
@@ -15,6 +19,8 @@ public class Base64Util {
         }
         //编码
         String encodedText = encoder.encodeToString(textByte);
+        if(removeEquals)
+            encodedText = encodedText.replaceAll("=", "");
         return encodedText;
     }
 
