@@ -242,7 +242,7 @@ public class BeanUtil {
     /**
      * 直接读取对象属性值,无视private/protected修饰符,不经过getter函数.
      */
-    public static Object getFieldValue(final Object object, final String fieldName) {
+    public static Object getFieldValue(final Object object, final String fieldName) throws IllegalArgumentException,RuntimeException {
         Field field = getDeclaredField(object, fieldName);
 
         if (field == null) {
@@ -263,7 +263,7 @@ public class BeanUtil {
     /**
      * 直接设置对象属性值,无视private/protected修饰符,不经过setter函数.
      */
-    public static void setFieldValue(final Object object, final String fieldName, final Object value) {
+    public static void setFieldValue(final Object object, final String fieldName, final Object value) throws IllegalArgumentException,RuntimeException {
         Field field = getDeclaredField(object, fieldName);
 
         if (field == null) {
@@ -319,6 +319,79 @@ public class BeanUtil {
 
     private static String getReadMethod(String name) {
         return "get" + name.substring(0, 1).toUpperCase(Locale.ENGLISH) + name.substring(1);
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * @param obj 操作的对象
+     * @param att 操作的属性
+     * @param value 设置的值
+     * @param type 参数的类型
+     * @return 存在setter方法
+     * setter(obj, "name", "XX", String.class);setter(obj, "age", 18, int.class);
+     */
+    public static boolean setter(Object obj, String att, Object value, Class<?>type){
+        try {
+            Method method = obj.getClass().getMethod("set" + capitalFirst(att), type);
+            method.invoke(obj, value);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    /**
+     * @param obj 操作的对象
+     * @param att 操作的属性
+     * @return 属性值
+     */
+    public static Object getter(Object obj, String att){
+        Object object = null;
+        try {
+            Method method = obj.getClass().getMethod("get" + capitalFirst(att));
+            object = method.invoke(obj);
+        }catch (Exception e){
+        }
+        return object;
+    }
+    /**
+     * 首字母大写
+     */
+    protected static String capitalFirst(String old){	// 将单词的首字母大写
+        String str = old.substring(0,1).toUpperCase() + old.substring(1) ;
+        return str ;
+    }
+
+//    class Person {//Person class for test.
+//        private String name;
+//        private int age;
+//        public String getName(){return this.name;}
+//        public void setName(String name){this.name = name;}
+//        public void setAge(int age){this.age = age;}
+//        public int getAge(){return this.age;}
+//    }
+    public static void main(String []args){
+        Class<?> c = null;
+        Object obj = null;
+        try{
+            c = Class.forName("Person");
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        try {
+            obj = c.newInstance();
+        }catch (InstantiationException e){
+            e.printStackTrace();
+        }catch (IllegalAccessException e){
+            e.printStackTrace();
+        }
+        setter(obj, "name", "XX", String.class);
+        setter(obj, "age", 18, int.class);
+        System.out.print("姓名：");
+        System.out.print(getter(obj, "name"));
+        System.out.print("年龄：");
+        System.out.print(getter(obj, "age"));
     }
 
 }
